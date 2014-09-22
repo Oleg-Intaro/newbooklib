@@ -1,0 +1,44 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Книга</h1>
+    <div id="page">
+        <table class="record_properties">
+            <tbody>
+                <tr>
+                    <th>Название</th>
+                    <td>{{ entity.title }}</td>
+                </tr>
+                <tr>
+                    <th>Автор</th>
+                    <td>{{ entity.author }}</td>
+                </tr>
+                <tr>
+                    <th>Дата прочтения</th>
+                    <td>{{ entity.lastRead|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <th>Разрешить скачивание</th>
+                    <td>{{ entity.allowDownload?"Да":"Нет" }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <ul class="record_actions">
+            <li>
+                <a href="{{ path('book') }}">
+                    К списку книг
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('book_edit', { 'id': entity.id }) }}">
+                    Редактировать
+                </a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                    {{ form_row(delete_form.submit, { 'label': 'Удалить' }) }}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div><!--#page-->
+{% endblock %}

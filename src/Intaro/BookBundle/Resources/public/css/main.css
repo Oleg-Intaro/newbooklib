@@ -1,0 +1,62 @@
+*, html{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: Arial;
+    color: #444;
+}
+
+.container{
+    width: 1200px;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+.entity{
+    padding: 10px;
+    border-bottom: 1px solid grey;
+}
+
+span.entity_label {
+    font-weight: bold;
+}
+
+.entity_cover{
+    width: 100px;
+    height: 100px;
+    float: left;
+    margin-right: 22px;
+}
+
+.entity_content{
+    width: 700px;
+    height: 100px;
+}
+
+.container a{
+    text-decoration: none;
+}
+
+.entity_nav{
+    padding: 10px;
+}
+
+#page{
+    padding-top: 10px;
+}
+
+ul.record_actions{
+    margin-top: 10px;
+}
+
+.cover{
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+}
+
+.record_properties{
+    text-align: left;
+}

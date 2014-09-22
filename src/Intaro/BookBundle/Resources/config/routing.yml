@@ -1,0 +1,54 @@
+# Получаем список всех книг
+book:
+    path: /
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:index" }
+    
+# Создаём новую книгу  
+book_create:
+    path: /create
+    methods: [POST]
+    defaults: { _controller: "IntaroBookBundle:Book:create" }
+    
+# Показываем форму для создания книги  
+book_new:
+    path: /new
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:new" }
+    
+# Показываем книгу  
+book_show:
+    path: /{id}/show
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:show" }
+    
+# Редактируем книгу  
+book_edit:
+    path: /{id}/edit
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:edit" }
+    
+# Редактируем книгу  
+book_update:
+    path: /{id}/update
+    methods: [POST]
+    defaults: { _controller: "IntaroBookBundle:Book:update" }
+    
+# Удаляем книгу  
+book_delete:
+    path: /{id}/delete
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:delete" }
+    
+# Скачиваем книгу  
+book_download:
+    path: /{id}/download
+    methods: [GET]
+    defaults: { _controller: "IntaroBookBundle:Book:download" }
+
+    
+     
+     
+
+
+    

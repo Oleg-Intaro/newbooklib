@@ -1,0 +1,11 @@
+{% block form_row %}
+    {% spaceless %}
+        <tr>
+            <td> {{ form_label(form) }}</td>
+            <td> {{ form_widget(form) }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"> {{ form_errors(form) }}</td>
+        </tr>
+    {% endspaceless %}
+{% endblock form_row %}

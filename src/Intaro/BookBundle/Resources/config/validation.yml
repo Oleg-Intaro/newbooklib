@@ -1,0 +1,38 @@
+Intaro\BookBundle\Entity\Book:
+    properties:
+        title:
+            - NotBlank:
+                message: "Пожалуйста укажите название"
+            - Length:
+                min: 2
+                max: 100
+                minMessage: "Название должно быть не менее {{ limit }} символов"
+                maxMessage: "Название должно быть не более {{ limit }} символов"
+        author:
+            - NotBlank: 
+                message: "Пожалуйста укажите автора."
+            - Length:
+                min: 3
+                max: 100
+                minMessage: "Автор должен быть не менее {{ limit }} символов"
+                maxMessage: "Автор должен быть не более {{ limit }} символов"
+        file:
+            - NotBlank:
+                message: "Пожалуйста укажите файл с книгой"
+                groups: [create]
+            - File:
+                maxSize: 5M
+#                mimeTypes: [application/pdf, application/x-pdf]
+                maxSizeMessage: "Размер файла не должен привышать {{ limit }} {{ suffix }}"
+                mimeTypesMessage: "Данный файл не подерживается. Поддерживаемый формат: pdf"
+        coverFile:
+            - Image:
+                mimeTypes: [image/png, image/jpeg]
+                mimeTypesMessage: "Разрешены только изображения форматов jpeg, png"
+        lastRead:
+            - NotBlank:
+                message: "Пожалуйста укажите дату прочтения"
+            - Type:
+                type: \DateTime
+                message: "Неверный формат даты"
+            

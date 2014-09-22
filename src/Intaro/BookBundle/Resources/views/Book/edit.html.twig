@@ -1,0 +1,72 @@
+{% extends '::base.html.twig' %}
+{% block stylesheets %}
+    <link href="{{ asset('bundles/intarobook/css/form.css') }}" rel="stylesheet" />
+    {{ parent() }}
+{% endblock %}
+
+{% block body -%}
+    <h1>Редактировать книгу</h1>
+    <div id="page">
+        {{ form_start(edit_form, {attr: {'novalidate': 'novalidate'}}) }}
+            <table>
+                <tr>
+                    <td colspan="2">
+                        {{ form_errors(edit_form) }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td> {{ form_label(edit_form.title, 'Название') }}</td>
+                    <td> {{ form_widget(edit_form.title) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"> {{ form_errors(edit_form.title) }}</td>
+                </tr>
+
+                <tr>
+                    <td> {{ form_label(edit_form.author, 'Автор') }}</td>
+                    <td> {{ form_widget(edit_form.author) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"> {{ form_errors(edit_form.author) }}</td>
+                </tr>
+
+                <tr>
+                    <td> {{ form_label(edit_form.lastRead, 'Дата прочтения') }}</td>
+                    <td> {{ form_widget(edit_form.lastRead) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"> {{ form_errors(edit_form.lastRead) }}</td>
+                </tr>
+
+                <tr>
+                    <td> {{ form_label(edit_form.allowDownload, 'Разрешить скачивание') }}</td>
+                    <td> {{ form_widget(edit_form.allowDownload) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"> {{ form_errors(edit_form.allowDownload) }}</td>
+                </tr>
+            </table>
+            {{ form_row(edit_form.submit, { 'label': 'Обновить' }) }}
+        {{ form_end(edit_form) }}
+        <div class="cover">
+                {% if entity.WebCoverPath %}
+                    {{ asset(entity.WebCoverPath)|img(70, 70) }}
+                {% else %}
+                    {{ asset('bundles/intarobook/img/default_cover.png')|img(70, 70) }}
+                {% endif %}
+        </div><!--.cover-->
+        <ul class="record_actions">
+            <li>
+                <a href="{{ path('book') }}">
+                    К списку книг
+                </a>
+            </li>
+            <li>
+                {{ form_start(delete_form) }}
+                    {{ form_row(delete_form.submit, { 'label': 'Удалить' }) }}
+                {{ form_end(delete_form) }}
+            </li>
+        </ul>
+    </div><!--#page-->
+{% endblock %}

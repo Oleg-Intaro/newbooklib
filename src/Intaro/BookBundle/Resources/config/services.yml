@@ -1,0 +1,23 @@
+parameters:
+#    intaro_book.example.class: Intaro\BookBundle\Example
+
+services:
+    intaro_book.file_remover:
+        class: Intaro\BookBundle\Subscriber\BookFileRemover
+        tags:
+            - { name: doctrine.event_listener, event: postRemove }
+    
+    intaro.twig.img_extension:
+        class: Intaro\BookBundle\Twig\ImageResizerExtention
+        tags:
+            - { name: twig.extension }
+    
+    memcache:
+        class: Memcache
+        calls:
+            - [ connect, ['localhost', 11211] ]
+            
+    memcache_driver:
+        class: Doctrine\Common\Cache\MemcacheCache
+        calls:
+            - [ setMemcache, [@memcache] ]

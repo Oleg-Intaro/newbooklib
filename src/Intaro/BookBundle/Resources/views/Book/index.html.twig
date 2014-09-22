@@ -1,0 +1,42 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Список книг</h1>
+    {% if is_granted('ROLE_USER') %}
+        <nav class="entity_nav">
+            <ul>
+                <li>
+                    <a href="{{ path('book_new') }}">
+                        Добавить книгу
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+    <div id="page">
+        {% for entity in entities %}
+            <div class="entity">
+                <div class="entity_cover">
+                    {% if entity.WebCoverPath %}
+                          {{ asset(entity.WebCoverPath)|img }}
+                    {% else %}
+                          {{ asset('bundles/intarobook/img/default_cover.png')|img }}
+                    {% endif %}
+                </div><!--.entity_cover-->
+                <div class="entity_content">
+                    <p><span class="entity_label">Название:</span> {{ entity.title }}</p>
+                    <p><span class="entity_label">Автор:</span> {{ entity.author }}</p>
+                    <br />
+                    <p>
+                        {% if entity.allowDownload %}
+                               <a href="{{ path('book_download', { 'id': entity.id }) }}">Скачать</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_USER') %}
+                            <a href="{{ path('book_edit', { 'id': entity.id }) }}">Редактировать</a>
+                        {% endif %}
+                    </p>
+                </div><!--.entity_content-->
+            </div><!--.entity--> 
+        {% endfor %}
+    </div><!--#page-->
+{% endblock %}

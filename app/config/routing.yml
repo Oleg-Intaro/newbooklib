@@ -1,0 +1,7 @@
+intaro_book:
+    resource: "@IntaroBookBundle/Resources/config/routing.yml"
+    prefix:   /book
+    
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+

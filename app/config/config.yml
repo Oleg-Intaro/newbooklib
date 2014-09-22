@@ -4,7 +4,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator: ~
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -59,6 +59,9 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        query_cache_driver:
+            type: service
+            id: memcache_driver
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -67,3 +70,10 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+    
+# FOS User Configuration
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Intaro\BookBundle\Entity\User
+ 
