@@ -1,0 +1,7 @@
+parameters:
+#    intaro_api.example.class: Intaro\ApiBundle\Example
+
+services:
+#    intaro_api.example:
+#        class: %intaro_api.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

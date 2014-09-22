@@ -1,3 +1,7 @@
+intaro_api:
+    resource: "@IntaroApiBundle/Resources/config/routing.yml"
+    prefix:   /
+
 intaro_book:
     resource: "@IntaroBookBundle/Resources/config/routing.yml"
     prefix:   /book

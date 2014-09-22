@@ -76,4 +76,26 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Intaro\BookBundle\Entity\User
+    
+# FOS REST Configuration
+fos_rest:
+    routing_loader:
+        default_format: json
+        include_format: false
+    
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
+    view:
+        view_response_listener: force
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors
+        
+    #disable_csrf_role: ROLE_API
+ 
+# Sensio Framework
+sensio_framework_extra:
+    view: { annotations: false }
  
