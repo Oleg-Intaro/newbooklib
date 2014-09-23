@@ -190,6 +190,7 @@ class ApiBookController extends FOSRestController
      */
     private function processForm(Book $entity, Request $request)
     {
+        $statusCode = $this->getEntityStatusCode($entity);
         $form = $this->createForm(new BookType(), $entity);
         $form->submit($request);
         if ($form->isValid()) {
@@ -198,7 +199,7 @@ class ApiBookController extends FOSRestController
             return $this->routeRedirectView(
                 'intaro_api_book_get_single',
                 array('id' => $entity->getId()),
-                $this->getEntityStatusCode()
+                $statusCode
             );
         }
 
