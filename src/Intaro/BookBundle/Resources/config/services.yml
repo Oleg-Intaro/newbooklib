@@ -6,6 +6,11 @@ services:
         class: Intaro\BookBundle\Subscriber\BookFileRemover
         tags:
             - { name: doctrine.event_listener, event: postRemove }
+            
+#    intaro_book.cache_cleaner:
+#        class: Intaro\BookBundle\Subscriber\CacheCleaner
+#        tags:
+#            - { name: doctrine.event_listener, event: postRemove }
     
     intaro.twig.img_extension:
         class: Intaro\BookBundle\Twig\ImageResizerExtention

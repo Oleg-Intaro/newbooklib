@@ -25,6 +25,8 @@ class BookController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
+        
+        // переделать
         $cacheDriver = $this->get('memcache_driver');
         $entities = $em->getRepository('IntaroBookBundle:Book')
             ->findAllOrderedByDateCached($cacheDriver);
@@ -51,6 +53,8 @@ class BookController extends Controller
             $entity->upload();
             $entity->uploadCover();
             $em->flush();
+            
+            // избавиться.
             $this->clearCache();
 
             return $this->redirect($this->generateUrl(
@@ -203,6 +207,7 @@ class BookController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
+            // избавиться
             $this->clearCache();
 
             return $this->redirect($this->generateUrl(
@@ -238,6 +243,7 @@ class BookController extends Controller
 
             $em->remove($entity);
             $em->flush();
+            // избавиться
             $this->clearCache();
         }
 
@@ -291,6 +297,7 @@ class BookController extends Controller
 
     /**
      * Очищает кеш книг
+     * вынести в слушателя
      */
     private function clearCache()
     {
