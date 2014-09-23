@@ -98,4 +98,10 @@ fos_rest:
 # Sensio Framework
 sensio_framework_extra:
     view: { annotations: false }
+    
+# JMS serializer
+#jms_serializer:
+#    handlers:
+#        datetime:
+#            default_format: "Y-m-d\TH:i:sP"
  

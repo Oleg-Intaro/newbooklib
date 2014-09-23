@@ -49,8 +49,8 @@ class Book
      * @var DateTime Дата прочтения
      *
      * @ORM\Column(name="last_read", type="datetime", nullable=true)
-     * Serializer\Expose
-     * Serializer\Type("DateTime")
+     * @Serializer\Expose
+     * @Serializer\Type("DateTime")
      */
     private $lastRead;
 
@@ -58,8 +58,8 @@ class Book
      * @var boolean Разрешить скачивание
      *
      * @ORM\Column(name="allow_download", type="boolean")
-     * Serializer\Expose
-     * Serializer\Type("boolean")
+     * @Serializer\Expose
+     * @Serializer\Type("boolean")
      */
     private $allowDownload;
 
@@ -67,8 +67,9 @@ class Book
      * @var string Путь до файла
      * 
      * @ORM\Column(name="path", type="string", length=255, nullable=true)
-     * Serializer\Expose
-     * Serializer\Type("string")
+     * @Serializer\Expose
+     * @Serializer\Type("string")
+     * @Serializer\Accessor(getter="getSerializedPath") 
      */
     private $path;
 
@@ -76,8 +77,9 @@ class Book
      * @var string Путь до файла обложки
      * 
      * @ORM\Column(name="cover_path", type="string", length=255, nullable=true)
-     * Serializer\Expose
-     * Serializer\Type("integer")
+     * @Serializer\Expose
+     * @Serializer\Type("string")
+     * @Serializer\Accessor(getter="getSerializedCoverPath") 
      */
     private $coverPath;
 
@@ -487,5 +489,27 @@ class Book
     public function setDirValue()
     {
         $this->additionalDir = date('Y/m/d');
+    }
+
+    /**
+     * Выдаёт абсолютный путь при сериализации до файла с книгой, если скачивание разрешено
+     * 
+     * @return string
+     */
+    public function getSerializedPath()
+    {
+        return ($this->getAllowDownload())
+            ? $this->getAbsolutePath()
+            : null;
+    }
+
+    /**
+     * Выдаёт абсолютный путь при сериализации до файла с обложкой книги
+     * 
+     * @return string
+     */
+    public function getSerializedCoverPath()
+    {
+        return $this->getAbsoluteCoverPath();
     }
 }

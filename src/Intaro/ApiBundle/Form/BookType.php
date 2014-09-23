@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Форма книги
+ * Форма книги для обработки сериализованных данных
  */
 class BookType extends AbstractType
 {
@@ -19,7 +19,7 @@ class BookType extends AbstractType
         $builder
             ->add('title')
             ->add('author')
-            ->add('lastRead')
+            ->add('lastRead', 'date', array('widget' => 'single_text'))
             ->add('allowDownload');
     }
 
@@ -31,7 +31,6 @@ class BookType extends AbstractType
         $resolver->setDefaults(array(
             'data_class'        => 'Intaro\BookBundle\Entity\Book',
             'csrf_protection'   => false,
-            //'cascade_validation' => true,
         ));
     }
 
@@ -40,6 +39,6 @@ class BookType extends AbstractType
      */
     public function getName()
     {
-        return 'intaro_apibundle_book';
+        return 'book';
     }
 }
