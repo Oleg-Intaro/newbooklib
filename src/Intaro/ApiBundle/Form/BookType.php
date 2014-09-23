@@ -19,7 +19,7 @@ class BookType extends AbstractType
         $builder
             ->add('title')
             ->add('author')
-            ->add('lastRead', 'date', array('widget' => 'single_text'))
+            ->add('lastRead', 'datetime', array('widget' => 'single_text'))
             ->add('allowDownload');
     }
 

@@ -18,7 +18,10 @@ intaro_api_book_add:
     defaults: { _controller: "IntaroApiBundle:ApiBook:add", _format: "json" }
     methods: [POST]
 #  
-## Редактируем книгу
-#intaro_api_book_edit:
-#    path: /books/{id}/edit
-#    defaults: { _controller: "IntaroApiBundle:ApiBook:edit" }
+# Редактируем книгу
+intaro_api_book_edit:
+    path: /books/{id}/edit
+    defaults: { _controller: "IntaroApiBundle:ApiBook:edit", _format: "json" }
+    methods: [POST]
+    requirements:
+        id: "\d+"

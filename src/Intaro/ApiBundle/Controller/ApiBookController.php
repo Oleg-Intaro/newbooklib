@@ -8,6 +8,7 @@ use Intaro\BookBundle\Entity\Book;
 use Intaro\ApiBundle\Form\BookType;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\View;
+use FOS\RestBundle\Util\Codes;
 
 /**
  * Контролер реализует API для работы с книгами
@@ -15,7 +16,8 @@ use FOS\RestBundle\View\View;
 class ApiBookController extends FOSRestController
 {
     /**
-     * Получаем список всех книг
+     * Получает список всех книг. Если книжка не доступна для скачивания, то 
+     * свойство "path" переданно не будет.
      * 
      * **Формат ответа**
      *
@@ -54,12 +56,12 @@ class ApiBookController extends FOSRestController
      */
     public function getAllAction()
     {
-        $entities = $this->getDoctrine()->getEntityManager()
+        $entities = $this->getEm()
             ->getRepository('IntaroBookBundle:Book')
             ->findAll();
 
         if (!$entities) {
-            return View::create(array('errors' => 'Книги не найдены'), 404);
+            return $this->notFoundView('Книги не найдены');
         }
 
         return array('books' => $entities);
@@ -95,12 +97,12 @@ class ApiBookController extends FOSRestController
      */
     public function getSingleAction($id)
     {
-        $entity = $this->getDoctrine()->getEntityManager()
+        $entity = $this->getEm()
             ->getRepository('IntaroBookBundle:Book')
             ->find($id);
 
         if (!$entity) {
-            return View::create(array('errors' => 'Книга не найдена c id: '.$id ), 404);
+            return $this->notFoundView('Книга не найдена c id: '.$id);
         }
 
         return array('book' => $entity);
@@ -124,7 +126,6 @@ class ApiBookController extends FOSRestController
      * 
      * @ApiDoc( 
      *     description="Добавляет книгу, правда без файла самой книги",
-     *     output = "Intaro\BookBundle\Entity\Book",
      *     statusCodes={
      *         201="Если книга успешно добавлена",
      *         400="Если есть ошибки валидации"
@@ -135,20 +136,118 @@ class ApiBookController extends FOSRestController
      */
     public function addAction(Request $request)
     {
-        $entity = new Book();
+          return $this->processForm(new Book(), $request);
+    }
+
+    /**
+     * Редактирует книгу
+     * 
+     * **Формат запроса**
+     * 
+     *     {
+     *       "book":{
+     *         "title":"Json Book",
+     *         "author":"Json Author",
+     *         "lastRead":"2014-10-22T11:50:49+0400",
+     *         "allowDownload":true
+     *       }
+     *     }
+     * 
+     * @param Request $request
+     * @param int     $id
+     * 
+     * @ApiDoc( 
+     *     description="Редактирует книгу",
+     *     output = "Intaro\BookBundle\Entity\Book",
+     *     statusCodes={
+     *         204="Если книга успешно обновлена",
+     *         400="Если есть ошибки валидации"
+     *     }
+     * )
+     * 
+     * @return View
+     */
+    public function editAction(Request $request, $id)
+    {
+        $entity = $this->getEm()
+            ->getRepository('IntaroBookBundle:Book')
+            ->find($id);
+
+        if (!$entity) {
+            return $this->notFoundView('Книга не найдена c id: '.$id);
+        }
+
+        return $this->processForm($entity, $request);
+    }
+
+    /**
+     * Создаёт форму для приёма данных для редактирования и добавления книги
+     * 
+     * @param Book    $entity
+     * @param Request $request
+     * 
+     * @return View
+     */
+    private function processForm(Book $entity, Request $request)
+    {
         $form = $this->createForm(new BookType(), $entity);
         $form->submit($request);
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $this->saveEntity($entity);
 
             return $this->routeRedirectView(
                 'intaro_api_book_get_single',
-                array('id' => $entity->getId())
+                array('id' => $entity->getId()),
+                $this->getEntityStatusCode()
             );
         }
 
-        return View::create($form, 400);
+        return View::create($form, Codes::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * Возвращает Entity Manager'а
+     * 
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    private function getEm()
+    {
+        return $this->getDoctrine()->getEntityManager();
+    }
+
+    /**
+     * Сохраняет книгу
+     * 
+     * @param Book $entity
+     */
+    private function saveEntity($entity)
+    {
+        $em = $this->getEm();
+        $em->persist($entity);
+        $em->flush();
+    }
+
+    /**
+     * Генерирует View 404
+     * 
+     * @param string $message
+     * 
+     * @return View
+     */
+    private function notFoundView($message)
+    {
+        return View::create(array('errors' => $message), Codes::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Определяет, какой статус код установить при сохранении книги - создана или отредактированна
+     * 
+     * @param Book $entity
+     * 
+     * @return int
+     */
+    private function getEntityStatusCode($entity)
+    {
+        return $entity->isNew() ? Codes::HTTP_CREATED : Codes::HTTP_NO_CONTENT;
     }
 }

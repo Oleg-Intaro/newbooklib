@@ -512,4 +512,14 @@ class Book
     {
         return $this->getAbsoluteCoverPath();
     }
+
+    /**
+     * Показывает новая запись или нет
+     * 
+     * @return bool
+     */
+    public function isNew()
+    {
+        return !$this->getId();
+    }
 }
