@@ -26,10 +26,8 @@ class BookController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         
-        // переделать
-        $cacheDriver = $this->get('memcache_driver');
-        $entities = $em->getRepository('IntaroBookBundle:Book')
-            ->findAllOrderedByDateCached($cacheDriver);
+        // данные берутся из кеша, если они там есть
+        $entities = $em->getRepository('IntaroBookBundle:Book')->findAllOrderedByDate();
 
         return array(
             'entities' => $entities,
@@ -50,12 +48,11 @@ class BookController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
+            
             $entity->upload();
             $entity->uploadCover();
-            $em->flush();
             
-            // избавиться.
-            $this->clearCache();
+            $em->flush(); 
 
             return $this->redirect($this->generateUrl(
                 'book_show',
@@ -83,6 +80,7 @@ class BookController extends Controller
             'method' => 'POST',
             'validation_groups' => array('Book', 'create'),
         ));
+        
         $form->add('file');
         $form->add('coverFile');
         $form->add('submit', 'submit');
@@ -207,9 +205,7 @@ class BookController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
-            // избавиться
-            $this->clearCache();
-
+            
             return $this->redirect($this->generateUrl(
                 'book_edit',
                 array('id' => $id)
@@ -243,8 +239,6 @@ class BookController extends Controller
 
             $em->remove($entity);
             $em->flush();
-            // избавиться
-            $this->clearCache();
         }
 
         return $this->redirect($this->generateUrl('book'));
@@ -299,6 +293,7 @@ class BookController extends Controller
      * Очищает кеш книг
      * вынести в слушателя
      */
+    /*
     private function clearCache()
     {
         $cacheDriver = $this->get('memcache_driver');
@@ -306,4 +301,5 @@ class BookController extends Controller
             $cacheDriver->delete('book_entities');
         }
     }
+     */
 }

@@ -60,8 +60,17 @@ doctrine:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         query_cache_driver:
-            type: service
-            id: memcache_driver
+            #type: service
+            #id: memcache_driver
+            
+            # Эксперементируем с кешем
+            type:           memcache
+            host:           localhost
+            port:           11211
+            instance_class: Memcache
+            class:          Doctrine\Common\Cache\MemcacheCache
+            # /Эксперементируем с кешем
+
 
 # Swiftmailer Configuration
 swiftmailer:

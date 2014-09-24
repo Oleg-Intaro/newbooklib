@@ -4,7 +4,7 @@ namespace Intaro\BookBundle\Subscriber;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Intaro\BookBundle\Entity\Book;
-use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * Сбрасывает кеш при добавлении или редактировании книги
@@ -12,64 +12,81 @@ use Doctrine\Common\Cache\MemcacheCache;
 class CacheCleaner
 {
     /**
-     * @var MemcacheCache 
-     */
-    private $cacheDriver;
-
-    /**
      * @var string
      */
     private $cacheId;
 
     /**
-     * @param MemcacheCache $cacheDriver
      * @param string        $cacheId
      */
-    public function __construct(MemcacheCache $cacheDriver, $cacheId)
+    public function __construct($cacheId)
     {
-        $this->cacheDriver = $cacheDriver;
         $this->cacheId = $cacheId;
     }
 
     /**
-     * @return MemcacheCache
-     */
-    public function getCacheDriver()
-    {
-        return $this->cacheDriver;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCacheId()
-    {
-        return $this->cacheId;
-    }
-
-    /**
-     * Очищает кеш
+     * Срабатывает при добавлении
      * 
      * @param LifecycleEventArgs $args
      */
-    public function clearCache(LifecycleEventArgs $args)
+    public function postPersist(LifecycleEventArgs $args)
     {
-        $entity = $args->getEntity();
-
-        if (!$entity instanceof Book) {
+        if (!($args->getEntity() instanceof Book)) {
             return;
         }
 
-        $this->deleteCache();
+        $this->clearCache($this->getCacheDriver($args));
+    }
+
+    /**
+     * Срабатывает при обновлении
+     * 
+     * @param LifecycleEventArgs $args
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        if (!($args->getEntity() instanceof Book)) {
+            return;
+        }
+
+        $this->clearCache($this->getCacheDriver($args));
+    }
+
+    /**
+     * Срабатывает при удалении
+     * 
+     * @param LifecycleEventArgs $args
+     */
+    public function postRemove(LifecycleEventArgs $args)
+    {
+        if (!($args->getEntity() instanceof Book)) {
+            return;
+        }
+
+        $this->clearCache($this->getCacheDriver($args));
     }
 
     /**
      * Удалет из кеша кеш с идентификатором $this->cacheId, если таковой установлен
+     * 
+     * @param Cache $cd кеш драйвер
      */
-    private function deleteCache()
+    private function clearCache(Cache $cd)
     {
-        if ($this->getCacheDriver()->contains($this->getCacheId())) {
-            $this->getCacheDriver()->delete($this->getCacheId());
+        if ($cd->contains($this->cacheId)) {
+            $cd->delete($this->cacheId);
         }
+    }
+
+    /**
+     * Упрощает получение кеш дайвера
+     * 
+     * @param LifecycleEventArgs $args
+     * 
+     * @return Cache
+     */
+    private function getCacheDriver(LifecycleEventArgs $args)
+    {
+        return $args->getEntityManager()->getConfiguration()->getQueryCacheImpl();
     }
 }
