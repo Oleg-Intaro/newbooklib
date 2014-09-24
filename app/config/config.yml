@@ -113,4 +113,12 @@ sensio_framework_extra:
 #    handlers:
 #        datetime:
 #            default_format: "Y-m-d\TH:i:sP"
+
+# API AUTH
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        Intaro\ApiBundle\Entity\Client
+    access_token_class:  Intaro\ApiBundle\Entity\AccessToken
+    refresh_token_class: Intaro\ApiBundle\Entity\RefreshToken
+    auth_code_class:     Intaro\ApiBundle\Entity\AuthCode
  
