@@ -1,23 +1,35 @@
 parameters:
-#    intaro_book.example.class: Intaro\BookBundle\Example
+     intaro_book.cache_id: book_entities
+#     intaro_book.cache_lifetime: 24*60*60
+#     intaro_book.repository.book.class: Intaro\BookBundle\Entity\BookRepository
+#     intaro_book.book.class: Intaro\BookBundle\Entity\Book
 
 services:
     intaro_book.file_remover:
         class: Intaro\BookBundle\Subscriber\BookFileRemover
         tags:
             - { name: doctrine.event_listener, event: postRemove }
+            
+    intaro_book.cache_cleaner:
+        class: Intaro\BookBundle\Subscriber\CacheCleaner
+        arguments: [%intaro_book.cache_id%]
+        tags:
+            - { name: doctrine.event_listener, event: postRemove}
+            - { name: doctrine.event_listener, event: postUpdate}
+            - { name: doctrine.event_listener, event: postPersist}
     
     intaro.twig.img_extension:
         class: Intaro\BookBundle\Twig\ImageResizerExtention
         tags:
             - { name: twig.extension }
-    
-    memcache:
-        class: Memcache
-        calls:
-            - [ connect, ['localhost', 11211] ]
             
-    memcache_driver:
-        class: Doctrine\Common\Cache\MemcacheCache
-        calls:
-            - [ setMemcache, [@memcache] ]
+    
+#    memcache:
+#        class: Memcache
+#        calls:
+#            - [ connect, ['localhost', 11211] ]
+#            
+#    memcache_driver:
+#        class: Doctrine\Common\Cache\MemcacheCache
+#        calls:
+#            - [ setMemcache, [@memcache] ]
