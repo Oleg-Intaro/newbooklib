@@ -1,13 +1,13 @@
 # Получаем список всех книг
 intaro_api_book_get_all:
     path: /books
-    defaults: { _controller: "IntaroApiBundle:ApiBook:getAll", _format: "json" }
+    defaults: { _controller: "IntaroApiBundle:ApiBook:getAll"}
     methods: [GET]
     
 # Получаем одну книгу
 intaro_api_book_get_single:
     path: /books/{id}
-    defaults: { _controller: "IntaroApiBundle:ApiBook:getSingle", _format: "json" }
+    defaults: { _controller: "IntaroApiBundle:ApiBook:getSingle"}
     methods: [GET]
     requirements:
         id: "\d+"
@@ -15,13 +15,13 @@ intaro_api_book_get_single:
 # Добавляем книгу
 intaro_api_book_add:
     path: /books/add
-    defaults: { _controller: "IntaroApiBundle:ApiBook:add", _format: "json" }
+    defaults: { _controller: "IntaroApiBundle:ApiBook:add"}
     methods: [POST]
 #  
 # Редактируем книгу
 intaro_api_book_edit:
     path: /books/{id}/edit
-    defaults: { _controller: "IntaroApiBundle:ApiBook:edit", _format: "json" }
+    defaults: { _controller: "IntaroApiBundle:ApiBook:edit"}
     methods: [POST]
     requirements:
         id: "\d+"

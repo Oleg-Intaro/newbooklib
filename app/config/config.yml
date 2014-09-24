@@ -88,19 +88,11 @@ fos_user:
     
 # FOS REST Configuration
 fos_rest:
-    routing_loader:
-        default_format: json
-        include_format: false
-    
-    param_fetcher_listener: true
-    body_listener: true
-    format_listener: true
+    format_listener:
+        rules:
+            - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
     view:
         view_response_listener: force
-    body_converter:
-        enabled: true
-        validate: true
-        validation_errors_argument: validationErrors
         
     #disable_csrf_role: ROLE_API
  
