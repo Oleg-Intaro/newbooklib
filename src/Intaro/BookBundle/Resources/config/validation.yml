@@ -1,4 +1,9 @@
 Intaro\BookBundle\Entity\Book:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: 
+            fields: [title, author]
+            errorPath: title
+            message: 'Книга с таким названием данного автора уже добавлена'
     properties:
         title:
             - NotBlank:
