@@ -3,7 +3,6 @@
 namespace Intaro\BookBundle\EventListener;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Intaro\BookBundle\Entity\Book;
 use Doctrine\Common\Cache\Cache;
 
 /**
@@ -41,11 +40,9 @@ class CacheCleaner
      */
     public function onFlush(OnFlushEventArgs $args)
     {
-        if (!($args->getEntity() instanceof Book)) {
-            return;
-        }
-
-        $this->clearCache($this->getCacheDriver($args));
+        $this->clearCache(
+            $args->getEntityManager()->getConfiguration()->getQueryCacheImpl()
+        );
     }
 
     /**
@@ -58,17 +55,5 @@ class CacheCleaner
         if ($cd->contains($this->cacheId)) {
             $cd->delete($this->cacheId);
         }
-    }
-
-    /**
-     * Упрощает получение кеш дайвера
-     * 
-     * @param OnFlushEventArgs $args
-     * 
-     * @return Cache
-     */
-    private function getCacheDriver(OnFlushEventArgs $args)
-    {
-        return $args->getEntityManager()->getConfiguration()->getQueryCacheImpl();
     }
 }
