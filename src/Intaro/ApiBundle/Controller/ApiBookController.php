@@ -19,6 +19,10 @@ class ApiBookController extends FOSRestController
      * Получает список всех книг. Если книжка не доступна для скачивания, то 
      * свойство "path" переданно не будет.
      * 
+     * Форматы ответа json, xml - определяются заголовком. 
+     * Пример: Accept:application/json.
+     * Если формат не указан, ответ будет в json - формате.
+     * 
      * **Формат ответа**
      *
      *     {
@@ -70,6 +74,10 @@ class ApiBookController extends FOSRestController
     /**
      * Получаем книгу по идентификатору
      * 
+     * Форматы ответа json, xml - определяются заголовком. 
+     * Пример: Accept:application/json.
+     * Если формат не указан, ответ будет в json - формате.
+     * 
      * **Формат ответа**
      * 
      *     {
@@ -111,6 +119,8 @@ class ApiBookController extends FOSRestController
     /**
      * Добавляет новую книгу, правда без файла самой книги
      * 
+     * Форматы запроса json, xml. 
+     * 
      * **Формат запроса**
      * 
      *     {
@@ -141,6 +151,8 @@ class ApiBookController extends FOSRestController
 
     /**
      * Редактирует книгу
+     * 
+     * Форматы запроса json, xml. 
      * 
      * **Формат запроса**
      * 
