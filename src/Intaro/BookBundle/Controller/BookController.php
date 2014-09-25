@@ -21,11 +21,13 @@ class BookController extends Controller
      * Получаем список всех книг.
      *
      * @Template()
+     * 
+     * @return array
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-        
+        $em = $this->getEm();
+
         // данные берутся из кеша, если они там есть
         $entities = $em->getRepository('IntaroBookBundle:Book')->findAllOrderedByDate();
 
@@ -39,20 +41,23 @@ class BookController extends Controller
      * @param Request $request
      *
      * @Template("IntaroBookBundle:Book:new.html.twig")
+     * 
+     * @return array
      */
     public function createAction(Request $request)
     {
         $entity = new Book();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->getEm();
             $em->persist($entity);
-            
+
             $entity->upload();
             $entity->uploadCover();
-            
-            $em->flush(); 
+
+            $em->flush();
 
             return $this->redirect($this->generateUrl(
                 'book_show',
@@ -80,7 +85,7 @@ class BookController extends Controller
             'method' => 'POST',
             'validation_groups' => array('Book', 'create'),
         ));
-        
+
         $form->add('file');
         $form->add('coverFile');
         $form->add('submit', 'submit');
@@ -93,6 +98,8 @@ class BookController extends Controller
      *
      * @Template()
      * @Security("has_role('ROLE_USER')")
+     * 
+     * @return array
      */
     public function newAction()
     {
@@ -113,10 +120,12 @@ class BookController extends Controller
      *
      * @Template()
      * @Security("has_role('ROLE_USER')")
+     * 
+     * @return array
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEm();
 
         $entity = $em->getRepository('IntaroBookBundle:Book')->find($id);
 
@@ -139,10 +148,12 @@ class BookController extends Controller
      *
      * @Template()
      * @Security("has_role('ROLE_USER')")
+     * 
+     * @return array
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEm();
 
         $entity = $em->getRepository('IntaroBookBundle:Book')->find($id);
 
@@ -188,6 +199,8 @@ class BookController extends Controller
      * @param int     $id
      * 
      * @Template("IntaroBookBundle:Book:edit.html.twig")
+     * 
+     * @return array
      */
     public function updateAction(Request $request, $id)
     {
@@ -205,7 +218,7 @@ class BookController extends Controller
 
         if ($editForm->isValid()) {
             $em->flush();
-            
+
             return $this->redirect($this->generateUrl(
                 'book_edit',
                 array('id' => $id)
@@ -223,6 +236,8 @@ class BookController extends Controller
      *
      * @param Request $request
      * @param int     $id
+     * 
+     * @return RedirectResponse
      */
     public function deleteAction(Request $request, $id)
     {
@@ -230,7 +245,7 @@ class BookController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->getEm();
             $entity = $em->getRepository('IntaroBookBundle:Book')->find($id);
 
             if (!$entity) {
@@ -269,7 +284,7 @@ class BookController extends Controller
      */
     public function downloadAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEm();
         $entity = $em->getRepository('IntaroBookBundle:Book')->find($id);
         if (!$entity) {
             throw $this->createNotFoundException('Невозможно найти данную книгу.');
@@ -290,16 +305,12 @@ class BookController extends Controller
     }
 
     /**
-     * Очищает кеш книг
-     * вынести в слушателя
+     * Получает Entity Manager
+     * 
+     * @return Doctrine\Common\Persistence\ObjectManager
      */
-    /*
-    private function clearCache()
+    public function getEm()
     {
-        $cacheDriver = $this->get('memcache_driver');
-        if ($cacheDriver->contains('book_entities')) {
-            $cacheDriver->delete('book_entities');
-        }
+        return $this->getDoctrine()->getManager();
     }
-     */
 }
