@@ -91,6 +91,7 @@ fos_rest:
     format_listener:
         rules:
             - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: false }
+            - { path: '^/',  fallback_format: html}
     view:
         view_response_listener: force
         
@@ -98,7 +99,8 @@ fos_rest:
  
 # Sensio Framework
 sensio_framework_extra:
-    view: { annotations: false }
+    view:   { annotations: false }
+    router: { annotations: true }
     
 # JMS serializer
 #jms_serializer:

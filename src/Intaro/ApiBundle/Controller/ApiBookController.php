@@ -47,7 +47,6 @@ class ApiBookController extends FOSRestController
      *     output = "Intaro\BookBundle\Entity\Book",
      *     statusCodes={
      *         200="В случае успеха",
-     *         404="Если книги не найдены"
      *     }
      * )
      * 
@@ -59,10 +58,6 @@ class ApiBookController extends FOSRestController
         $entities = $this->getEm()
             ->getRepository('IntaroBookBundle:Book')
             ->findAll();
-
-        if (!$entities) {
-            return $this->notFoundView('Книги не найдены');
-        }
 
         return array('books' => $entities);
     }
@@ -89,7 +84,6 @@ class ApiBookController extends FOSRestController
      *     output = "Intaro\BookBundle\Entity\Book",
      *     statusCodes={
      *         200="В случае успеха",
-     *         404="Если книга не найдена"
      *     }
      * )
      * 
@@ -100,10 +94,6 @@ class ApiBookController extends FOSRestController
         $entity = $this->getEm()
             ->getRepository('IntaroBookBundle:Book')
             ->find($id);
-
-        if (!$entity) {
-            return $this->notFoundView('Книга не найдена c id: '.$id);
-        }
 
         return array('book' => $entity);
     }
