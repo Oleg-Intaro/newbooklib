@@ -1,6 +1,6 @@
 <?php
 
-namespace Intaro\BookBundle\Subscriber;
+namespace Intaro\BookBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Intaro\BookBundle\Entity\Book;

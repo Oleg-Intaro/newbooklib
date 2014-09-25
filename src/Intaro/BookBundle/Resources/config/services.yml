@@ -6,17 +6,15 @@ parameters:
 
 services:
     intaro_book.file_remover:
-        class: Intaro\BookBundle\Subscriber\BookFileRemover
+        class: Intaro\BookBundle\EventListener\BookFileRemover
         tags:
             - { name: doctrine.event_listener, event: postRemove }
             
     intaro_book.cache_cleaner:
-        class: Intaro\BookBundle\Subscriber\CacheCleaner
+        class: Intaro\BookBundle\EventListener\CacheCleaner
         arguments: [%intaro_book.cache_id%]
         tags:
-            - { name: doctrine.event_listener, event: postRemove}
-            - { name: doctrine.event_listener, event: postUpdate}
-            - { name: doctrine.event_listener, event: postPersist}
+            - { name: doctrine.event_listener, event: onFlush}
     
     intaro.twig.img_extension:
         class: Intaro\BookBundle\Twig\ImageResizerExtention

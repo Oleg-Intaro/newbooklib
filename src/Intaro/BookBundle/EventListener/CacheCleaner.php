@@ -1,8 +1,8 @@
 <?php
 
-namespace Intaro\BookBundle\Subscriber;
+namespace Intaro\BookBundle\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Intaro\BookBundle\Entity\Book;
 use Doctrine\Common\Cache\Cache;
 
@@ -25,39 +25,21 @@ class CacheCleaner
     }
 
     /**
-     * Срабатывает при добавлении
+     * Возвращает массив соббытий, на которые подписан данный Listener
      * 
-     * @param LifecycleEventArgs $args
+     * @return array
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function getSubscribedEvents()
     {
-        if (!($args->getEntity() instanceof Book)) {
-            return;
-        }
-
-        $this->clearCache($this->getCacheDriver($args));
-    }
-
-    /**
-     * Срабатывает при обновлении
-     * 
-     * @param LifecycleEventArgs $args
-     */
-    public function postUpdate(LifecycleEventArgs $args)
-    {
-        if (!($args->getEntity() instanceof Book)) {
-            return;
-        }
-
-        $this->clearCache($this->getCacheDriver($args));
+        return array('onFlush');
     }
 
     /**
      * Срабатывает при удалении
      * 
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $args
      */
-    public function postRemove(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $args)
     {
         if (!($args->getEntity() instanceof Book)) {
             return;
@@ -81,11 +63,11 @@ class CacheCleaner
     /**
      * Упрощает получение кеш дайвера
      * 
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $args
      * 
      * @return Cache
      */
-    private function getCacheDriver(LifecycleEventArgs $args)
+    private function getCacheDriver(OnFlushEventArgs $args)
     {
         return $args->getEntityManager()->getConfiguration()->getQueryCacheImpl();
     }
